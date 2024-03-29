@@ -1,4 +1,8 @@
-package ru.mediasoft.warehouse;
+package ru.mediasoft.warehouse.service;
+
+import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.dto.ProductDtoIn;
+import ru.mediasoft.warehouse.dto.ProductDtoOut;
 
 import java.util.Collection;
 import java.util.UUID;

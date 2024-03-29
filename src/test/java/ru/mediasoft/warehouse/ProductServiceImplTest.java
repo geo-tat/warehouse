@@ -7,6 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.dto.ProductDtoIn;
+import ru.mediasoft.warehouse.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.model.Product;
+import ru.mediasoft.warehouse.repository.ProductRepository;
+import ru.mediasoft.warehouse.service.ProductServiceImpl;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,7 +61,7 @@ public class ProductServiceImplTest {
                 .price(110.0)
                 .quantity(1100)
                 .build();
-        }
+    }
 
     @Test
     public void testCreateProduct() {

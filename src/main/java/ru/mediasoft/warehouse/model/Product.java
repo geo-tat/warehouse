@@ -1,5 +1,6 @@
-package ru.mediasoft.warehouse;
+package ru.mediasoft.warehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,8 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -44,10 +45,12 @@ public class Product {
     @NotNull
     private int quantity;
 
-    @UpdateTimestamp
-    private LocalDateTime updated;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "updated_quantity")
+    private LocalDateTime updatedQuantity;
 
     @CreationTimestamp
-    private LocalDateTime created;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate created;
 }

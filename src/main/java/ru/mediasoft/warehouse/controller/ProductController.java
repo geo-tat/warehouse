@@ -1,4 +1,4 @@
-package ru.mediasoft.warehouse;
+package ru.mediasoft.warehouse.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -6,6 +6,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
+import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.dto.ProductDtoIn;
+import ru.mediasoft.warehouse.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.service.ProductService;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -26,7 +30,7 @@ public class ProductController {
 
     @Operation(summary = "Обновление информации о товаре")
     @PatchMapping("/{id}")
-    ProductDtoOut update(@PathVariable UUID id, @RequestBody ProductDtoFotUpdate dto) {
+    ProductDtoOut update(@PathVariable UUID id, @RequestBody @Valid ProductDtoFotUpdate dto) {
         return service.update(id, dto);
     }
 

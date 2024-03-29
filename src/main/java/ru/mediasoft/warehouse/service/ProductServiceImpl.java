@@ -1,9 +1,16 @@
-package ru.mediasoft.warehouse;
+package ru.mediasoft.warehouse.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.mediasoft.warehouse.util.ProductMapper;
+import ru.mediasoft.warehouse.repository.ProductRepository;
+import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.dto.ProductDtoIn;
+import ru.mediasoft.warehouse.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.model.Product;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,8 +45,10 @@ public class ProductServiceImpl implements ProductService {
             productToUpdate.setDescription(dto.getDescription());
         if (dto.getSku() != null)
             productToUpdate.setSku(dto.getSku());
-        if (dto.getQuantity() != null)
+        if (dto.getQuantity() != null && dto.getQuantity()!=productToUpdate.getQuantity()) {
             productToUpdate.setQuantity(dto.getQuantity());
+            productToUpdate.setUpdatedQuantity(LocalDateTime.now());
+        }
         return productToUpdate;
     }
 
