@@ -27,7 +27,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleUniqueSkyException(final DataIntegrityViolationException e ) {
+    public ErrorResponse handleUniqueSkyException(final DataIntegrityViolationException e) {
         log.error("Товар с данным артикулом уже есть в базе данных", e);
         return new ErrorResponse("Товар с данным артикулом уже есть в базе данных");
     }

@@ -8,6 +8,6 @@ CREATE TABLE products (
     category VARCHAR(255) NOT NULL,
     price NUMERIC(10, 2) NOT NULL,
     quantity INT NOT NULL,
-    updated TIMESTAMP,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_quantity TIMESTAMP
 );

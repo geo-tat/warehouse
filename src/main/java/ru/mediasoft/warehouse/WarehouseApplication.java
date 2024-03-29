@@ -3,6 +3,10 @@ package ru.mediasoft.warehouse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * Приложение запускается здесь.
+ */
+
 @SpringBootApplication
 public class WarehouseApplication {
 
