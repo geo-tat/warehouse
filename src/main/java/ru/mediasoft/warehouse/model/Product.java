@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -40,7 +41,7 @@ public class Product {
     private String category;
 
     @NotNull
-    private double price;
+    private BigDecimal price;
 
     @NotNull
     private int quantity;

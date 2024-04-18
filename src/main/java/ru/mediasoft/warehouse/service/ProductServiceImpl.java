@@ -3,6 +3,7 @@ package ru.mediasoft.warehouse.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mediasoft.warehouse.util.ProductMapper;
 import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
@@ -23,6 +24,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDtoOut create(ProductDtoIn dto) {
         Product productToSave = ProductMapper.toEntity(dto);
+        UUID id = UUID.randomUUID();
+        productToSave.setId(id);
         return ProductMapper.toOut(repository.save(productToSave));
     }
 
