@@ -1,6 +1,7 @@
 package ru.mediasoft.warehouse.scheduling;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,7 +16,7 @@ import ru.mediasoft.warehouse.repository.ProductRepository;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-
+@Slf4j
 @Component
 @Profile("!local")
 @ConditionalOnProperty(name = "app.scheduling.enabled")
@@ -24,18 +25,18 @@ import java.util.Collection;
 public class SimpleProductPriceScheduler {
 
     private final ProductRepository repository;
-@Value("${app.scheduling.priceIncreasePercentage}")
+    @Value("${app.scheduling.priceIncreasePercentage}")
     private BigDecimal percentage;
 
     @Transactional
     @Scheduled(fixedRateString = "${app.scheduling.period}")
     @MeasureTime
     public void increasePrice() {
-        System.out.println("START SIMPLE SCHEDULER!");
+        log.info("START SIMPLE SCHEDULER!");
         final Collection<Product> products = repository.findAll();
         products.forEach(product -> product.setPrice(increase(product.getPrice(), percentage)));
         repository.saveAll(products);
-        System.out.println("END SIMPLE SCHEDULER!");
+        log.info("END SIMPLE SCHEDULER!");
     }
 
     private BigDecimal increase(BigDecimal oldPrice, BigDecimal percentage) {

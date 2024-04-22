@@ -28,11 +28,8 @@ logging:
 
 app:
   scheduling:
-    enabled: false
+    enabled: true
     period: 86400000
     priceIncreasePercentage: 10.1
     optimization:
-      enabled: false
-  util:
-    seeder:
-      enabled: false
+      enabled: true
