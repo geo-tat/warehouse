@@ -8,6 +8,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @Schema(description = "Информация о поступающем на склад товаре.")
@@ -29,7 +31,7 @@ public class ProductDtoIn {
     @NotNull(message = "Должна быть указана цена")
     @Schema(description = "Цена товара")
     @PositiveOrZero(message = "Цена не может быть отрицательной величиной")
-    private double price;
+    private BigDecimal price;
 
     @NotNull
     @Schema(description = "Количество товара")

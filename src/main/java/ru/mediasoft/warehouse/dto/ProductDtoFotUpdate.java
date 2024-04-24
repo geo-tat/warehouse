@@ -5,6 +5,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @Schema(description = "Информация о внесении изменений в товар товаре.")
@@ -22,7 +24,7 @@ public class ProductDtoFotUpdate {
 
     @Schema(description = "Цена товара")
     @PositiveOrZero
-    private Double price;
+    private BigDecimal price;
 
     @PositiveOrZero
     @Schema(description = "Количество товара")
