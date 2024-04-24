@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,7 +24,7 @@ public class ProductDtoOut {
     @Schema(description = "Категория товара")
     private String category;
     @Schema(description = "Цена товара")
-    private double price;
+    private BigDecimal price;
     @Schema(description = "Количество товара")
     private int quantity;
     @Schema(description = "Дата изменения количества товара")

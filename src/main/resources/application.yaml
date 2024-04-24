@@ -1,0 +1,30 @@
+spring:
+  liquibase:
+    enabled: false
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  profiles:
+    active: dev
+  application:
+    name: warehouse
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/warehouse-db
+    username: root
+    password: password
+
+logging:
+  level:
+    org.springframework.orm.jpa: INFO
+    org.springframework.transaction: INFO
+    org.springframework.transaction.interceptor: TRACE
+    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
