@@ -17,6 +17,7 @@ import ru.mediasoft.warehouse.service.ProductServiceImpl;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class ProductServiceImplTest {
                 .sku("SKU")
                 .description("Description")
                 .category("Category")
-                .price(10.0)
+                .price(BigDecimal.valueOf(10.0))
                 .quantity(100)
                 .build();
         dtoIn = ProductDtoIn.builder()
@@ -50,7 +51,7 @@ public class ProductServiceImplTest {
                 .sku("SKU")
                 .description("Description")
                 .category("Category")
-                .price(10.0)
+                .price(BigDecimal.valueOf(10.0))
                 .quantity(100)
                 .build();
         dtoUpdate = ProductDtoFotUpdate.builder()
@@ -58,7 +59,7 @@ public class ProductServiceImplTest {
                 .sku("NewSKU")
                 .description("NewDescription")
                 .category("NewCategory")
-                .price(110.0)
+                .price(BigDecimal.valueOf(110.0))
                 .quantity(1100)
                 .build();
     }
