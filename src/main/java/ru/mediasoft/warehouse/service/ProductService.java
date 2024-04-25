@@ -3,8 +3,10 @@ package ru.mediasoft.warehouse.service;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.search.criteria.SearchCriteria;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
@@ -21,4 +23,5 @@ public interface ProductService {
 
     void deleteById(UUID id);
 
+    Collection<ProductDtoOut> multiCriteriaSearch(List<SearchCriteria<?>> criteriaList, int from, int size, String sort);
 }

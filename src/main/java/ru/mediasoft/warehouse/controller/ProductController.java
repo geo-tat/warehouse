@@ -4,20 +4,22 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-
 import org.springframework.web.bind.annotation.*;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.search.criteria.SearchCriteria;
 import ru.mediasoft.warehouse.service.ProductService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/products")
 @Tag(name = "Товары", description = "Взаимодействие с товарами")
+
 public class ProductController {
     private final ProductService service;
 
@@ -57,5 +59,15 @@ public class ProductController {
     @DeleteMapping
     void deleteAllCars() {
         service.deleteAll();
+    }
+
+    @Operation(summary = "Поиск по критериям")
+    @GetMapping("/search")
+    public Collection<ProductDtoOut> multiCriteriaSearch(@RequestBody List<SearchCriteria<?>> criteriaList,
+                                                         @RequestParam(name = "from", defaultValue = "0") int from,
+                                                         @RequestParam(name = "size", defaultValue = "10") int size,
+                                                         @RequestParam(name = "sort", defaultValue = "name,DES") String sort) {
+
+        return service.multiCriteriaSearch(criteriaList, from, size, sort);
     }
 }
