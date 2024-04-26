@@ -1,9 +1,13 @@
 spring:
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog-master.xml
+
   application:
     name: warehouse
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect

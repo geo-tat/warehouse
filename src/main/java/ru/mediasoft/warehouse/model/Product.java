@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +14,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "products")
 @Builder
 @AllArgsConstructor
@@ -24,8 +23,8 @@ import java.util.UUID;
 public class Product {
 
     @Id
-    @Column(columnDefinition = "BINARY(16)", updatable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @NotBlank
@@ -48,10 +47,11 @@ public class Product {
 
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "updated_quantity")
+    @Column(name = "updated_quantity", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedQuantity;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDate created;
 }
