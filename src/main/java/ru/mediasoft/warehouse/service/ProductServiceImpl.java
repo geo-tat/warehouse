@@ -1,15 +1,9 @@
 package ru.mediasoft.warehouse.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
@@ -17,9 +11,8 @@ import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.Product;
 import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.search.criteria.SearchCriteria;
-import ru.mediasoft.warehouse.search.strategy.PredicateStrategy;
 import ru.mediasoft.warehouse.util.ProductMapper;
-import ru.mediasoft.warehouse.util.SortingMapper;
+import ru.mediasoft.warehouse.util.ProductSpecification;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -91,44 +84,13 @@ public class ProductServiceImpl implements ProductService {
         repository.deleteById(id);
     }
 
-
     @Override
-    public Collection<ProductDtoOut> multiCriteriaSearch(List<SearchCriteria<?>> criteriaList, int from, int size, String sort) {
-        Specification<Product> specification = buildSpecification(criteriaList);
-        Pageable pageable = PageRequest.of(from, size, SortingMapper.sorting(sort));
-
+    public Collection<ProductDtoOut> multiCriteriaSearch(List<SearchCriteria<?>> criteriaList, Pageable pageable) {
+        final ProductSpecification specification = new ProductSpecification(criteriaList);
         Page<Product> page = repository.findAll(specification, pageable);
 
         return page.getContent().stream()
                 .map(ProductMapper::toOut)
                 .collect(Collectors.toList());
-    }
-
-    private Specification<Product> buildSpecification(List<SearchCriteria<?>> criteriaList) {
-        return (root, query, cb) -> {
-            Predicate finalPredicate = cb.conjunction();
-
-            for (SearchCriteria<?> criteria : criteriaList) {
-                Predicate predicate = createPredicate(criteria, root, cb);
-                finalPredicate = cb.and(finalPredicate, predicate);
-            }
-
-            return finalPredicate;
-        };
-    }
-
-    private <T> Predicate createPredicate(SearchCriteria<T> criteria, Root<Product> root, CriteriaBuilder cb) {
-        Expression<T> expression = root.get(criteria.getField());
-        PredicateStrategy<T> strategy = criteria.getStrategy();
-        T value = criteria.getValue();
-        String operation = criteria.getOperation().name();
-
-        return switch (operation) {
-            case "EQUAL" -> strategy.getEqPattern(expression, value, cb);
-            case "LIKE" -> strategy.getLikePattern(expression, value, cb);
-            case "GREATER_THAN_OR_EQ" -> strategy.getLefLimitPattern(expression, value, cb);
-            case "LESS_THAN_OR_EQ" -> strategy.getRightLimitPattern(expression, value, cb);
-            default -> throw new IllegalArgumentException("Ошибка операции: " + operation);
-        };
     }
 }

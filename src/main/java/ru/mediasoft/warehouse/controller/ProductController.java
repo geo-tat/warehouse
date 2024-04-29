@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
@@ -19,7 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RequestMapping("/products")
 @Tag(name = "Товары", description = "Взаимодействие с товарами")
-
+@Validated
 public class ProductController {
     private final ProductService service;
 
@@ -62,12 +65,10 @@ public class ProductController {
     }
 
     @Operation(summary = "Поиск по критериям")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public Collection<ProductDtoOut> multiCriteriaSearch(@RequestBody List<SearchCriteria<?>> criteriaList,
-                                                         @RequestParam(name = "from", defaultValue = "0") int from,
-                                                         @RequestParam(name = "size", defaultValue = "10") int size,
-                                                         @RequestParam(name = "sort", defaultValue = "name,DES") String sort) {
+                                                         @PageableDefault(sort = "name") Pageable pageable) {
 
-        return service.multiCriteriaSearch(criteriaList, from, size, sort);
+        return service.multiCriteriaSearch(criteriaList, pageable);
     }
 }

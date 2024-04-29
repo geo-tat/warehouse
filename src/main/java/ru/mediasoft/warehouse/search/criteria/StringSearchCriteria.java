@@ -15,25 +15,10 @@ public class StringSearchCriteria implements SearchCriteria<String> {
 
     private final String field;
 
-    private final String operation;
+    private final OperationType operation;
 
     @NotBlank
     private final String value;
-
-    @Override
-    public String getField() {
-        return field;
-    }
-
-    @Override
-    public OperationType getOperation() {
-        return OperationType.fromString(operation);
-    }
-
-    @Override
-    public String getValue() {
-        return value;
-    }
 
     @Override
     public PredicateStrategy<String> getStrategy() {

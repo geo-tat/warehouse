@@ -16,26 +16,11 @@ public class BigDecimalSearchCriteria implements SearchCriteria<BigDecimal> {
 
     private final String field;
 
-    private final String operation;
+    private final OperationType operation;
 
     @NotNull
     private final BigDecimal value;
 
-
-    @Override
-    public String getField() {
-        return field;
-    }
-
-    @Override
-    public OperationType getOperation() {
-        return OperationType.fromString(operation);
-    }
-
-    @Override
-    public BigDecimal getValue() {
-        return value;
-    }
 
     @Override
     public PredicateStrategy<BigDecimal> getStrategy() {

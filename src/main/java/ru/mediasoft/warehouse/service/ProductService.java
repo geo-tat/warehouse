@@ -1,5 +1,6 @@
 package ru.mediasoft.warehouse.service;
 
+import org.springframework.data.domain.Pageable;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
@@ -23,5 +24,5 @@ public interface ProductService {
 
     void deleteById(UUID id);
 
-    Collection<ProductDtoOut> multiCriteriaSearch(List<SearchCriteria<?>> criteriaList, int from, int size, String sort);
+    Collection<ProductDtoOut> multiCriteriaSearch(List<SearchCriteria<?>> criteriaList, Pageable pageable);
 }

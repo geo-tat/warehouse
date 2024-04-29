@@ -5,28 +5,35 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.Product;
 import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.search.criteria.BigDecimalSearchCriteria;
 import ru.mediasoft.warehouse.search.criteria.StringSearchCriteria;
+import ru.mediasoft.warehouse.search.enums.OperationType;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @DataJpaTest
 @ActiveProfiles("local")
-@Import(TestConfig.class)
 public class ProductServiceIntegrationalTest {
     @Autowired
     ProductRepository repositoryTest;
-    @Autowired
+
     ProductService service;
+
+    Pageable pageable = PageRequest.of(0, 10);
 
     @BeforeEach
     void setUp() {
+        service = new ProductServiceImpl(repositoryTest);
+
         Product product = Product.builder()
                 .name("Name")
                 .sku("SKU")
@@ -63,10 +70,10 @@ public class ProductServiceIntegrationalTest {
         BigDecimalSearchCriteria criteria = BigDecimalSearchCriteria.builder()
                 .field("price")
                 .value(BigDecimal.valueOf(40))
-                .operation("GREATER_THAN_OR_EQ")
+                .operation(OperationType.GREATER_THAN_OR_EQ)
                 .build();
 
-        Collection<ProductDtoOut> testList = service.multiCriteriaSearch(List.of(criteria), 0, 10, "name,DES");
+        Collection<ProductDtoOut> testList = service.multiCriteriaSearch(List.of(criteria), pageable);
 
         Assertions.assertEquals(2, testList.size());
     }
@@ -76,10 +83,10 @@ public class ProductServiceIntegrationalTest {
         StringSearchCriteria criteria = StringSearchCriteria.builder()
                 .field("name")
                 .value("Name3")
-                .operation("=")
+                .operation(OperationType.EQUAL)
                 .build();
 
-        Collection<ProductDtoOut> testList = service.multiCriteriaSearch(List.of(criteria), 0, 10, "name,ASC");
+        Collection<ProductDtoOut> testList = service.multiCriteriaSearch(List.of(criteria), pageable);
 
         Assertions.assertEquals(1, testList.size());
     }

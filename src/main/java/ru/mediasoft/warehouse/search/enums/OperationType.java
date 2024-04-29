@@ -1,27 +1,22 @@
 package ru.mediasoft.warehouse.search.enums;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum OperationType {
-    EQUAL("="),
-    GREATER_THAN_OR_EQ(">="),
-    LESS_THAN_OR_EQ("<="),
-    LIKE("~");
+    @JsonProperty("operation")
+    @JsonAlias({"="})
+    EQUAL,
 
-    private final String operation;
+    @JsonProperty("operation")
+    @JsonAlias({">="})
+    GREATER_THAN_OR_EQ,
 
-    OperationType(String operation) {
-        this.operation = operation;
-    }
+    @JsonProperty("operation")
+    @JsonAlias({"<="})
+    LESS_THAN_OR_EQ,
 
-    @JsonCreator
-    public static OperationType fromString(String text) {
-        return switch (text.toUpperCase()) {
-            case "=", "EQUAL" -> EQUAL;
-            case ">=", "GREATER_THAN_OR_EQ" -> GREATER_THAN_OR_EQ;
-            case "<=", "LESS_THAN_OR_EQ" -> LESS_THAN_OR_EQ;
-            case "~", "LIKE" -> LIKE;
-            default -> throw new IllegalArgumentException("No constant with text " + text + " found");
-        };
-    }
+    @JsonProperty("operation")
+    @JsonAlias({"~"})
+    LIKE;
 }

@@ -16,26 +16,11 @@ public class LocalDateSearchCriteria implements SearchCriteria<LocalDate> {
 
     private final String field;
 
-    private final String operation;
+    private final OperationType operation;
 
     @NotNull
     private final LocalDate value;
 
-
-    @Override
-    public String getField() {
-        return field;
-    }
-
-    @Override
-    public OperationType getOperation() {
-        return OperationType.fromString(operation);
-    }
-
-    @Override
-    public LocalDate getValue() {
-        return value;
-    }
 
     @Override
     public PredicateStrategy<LocalDate> getStrategy() {
