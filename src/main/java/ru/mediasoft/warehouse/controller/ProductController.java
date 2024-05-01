@@ -58,12 +58,6 @@ public class ProductController {
         service.deleteById(id);
     }
 
-    @Operation(summary = "Удалить всю информацию о товаре")
-    @DeleteMapping
-    void deleteAllCars() {
-        service.deleteAll();
-    }
-
     @Operation(summary = "Поиск по критериям")
     @PostMapping("/search")
     public Collection<ProductDtoOut> multiCriteriaSearch(@RequestBody List<SearchCriteria<?>> criteriaList,

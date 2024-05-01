@@ -20,8 +20,6 @@ public interface ProductService {
 
     Collection<ProductDtoOut> getAll(Pageable pageable);
 
-    void deleteAll();
-
     void deleteById(UUID id);
 
     Collection<ProductDtoOut> multiCriteriaSearch(List<SearchCriteria<?>> criteriaList, Pageable pageable);

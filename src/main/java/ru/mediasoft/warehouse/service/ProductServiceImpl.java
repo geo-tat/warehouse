@@ -75,11 +75,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteAll() {
-        repository.deleteAll();
-    }
-
-    @Override
     public void deleteById(UUID id) {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
