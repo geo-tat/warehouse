@@ -5,6 +5,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import ru.mediasoft.warehouse.model.CategoryType;
 
 import java.math.BigDecimal;
 
@@ -22,7 +23,7 @@ public class ProductDtoFotUpdate {
     private String description;
 
     @Schema(description = "Категория товара")
-    private String category;
+    private CategoryType category;
 
     @Schema(description = "Цена товара")
     @PositiveOrZero
