@@ -8,6 +8,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import ru.mediasoft.warehouse.model.CategoryType;
 
 import java.math.BigDecimal;
 
@@ -27,9 +28,9 @@ public class ProductDtoIn {
     @Schema(description = "Описание товара")
     private String description;
 
-    @NotBlank(message = "Должна быть указана категория товара")
+    @NotNull(message = "Должна быть указана категория товара")
     @Schema(description = "Категория товара")
-    private String category;
+    private CategoryType category;
 
     @NotNull(message = "Должна быть указана цена")
     @Schema(description = "Цена товара")
