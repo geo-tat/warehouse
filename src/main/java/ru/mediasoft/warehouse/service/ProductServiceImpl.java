@@ -67,8 +67,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Collection<ProductDtoOut> getAll() {
-        Collection<Product> list = repository.findAll();
+    public Collection<ProductDtoOut> getAll(Pageable pageable) {
+        Page<Product> list = repository.findAll(pageable);
         return list.stream()
                 .map(ProductMapper::toOut)
                 .collect(Collectors.toList());
