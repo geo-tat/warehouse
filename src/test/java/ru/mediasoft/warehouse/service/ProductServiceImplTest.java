@@ -1,7 +1,7 @@
-package ru.mediasoft.warehouse;
+package ru.mediasoft.warehouse.service;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,15 +12,14 @@ import ru.mediasoft.warehouse.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.Product;
 import ru.mediasoft.warehouse.repository.ProductRepository;
-import ru.mediasoft.warehouse.service.ProductServiceImpl;
-
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceImplTest {
