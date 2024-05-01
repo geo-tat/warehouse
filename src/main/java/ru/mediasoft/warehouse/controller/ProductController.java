@@ -48,8 +48,8 @@ public class ProductController {
 
     @Operation(summary = "Выгрузить все товары со склада")
     @GetMapping
-    Collection<ProductDtoOut> getAll() {
-        return service.getAll();
+    Collection<ProductDtoOut> getAll(@PageableDefault(sort = "name") Pageable pageable) {
+        return service.getAll(pageable);
     }
 
     @Operation(summary = "Удалить информацию о товаре")
