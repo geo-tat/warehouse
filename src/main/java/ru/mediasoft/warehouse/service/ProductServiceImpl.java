@@ -2,17 +2,21 @@ package ru.mediasoft.warehouse.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.mediasoft.warehouse.util.ProductMapper;
-import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.Product;
+import ru.mediasoft.warehouse.repository.ProductRepository;
+import ru.mediasoft.warehouse.search.criteria.SearchCriteria;
+import ru.mediasoft.warehouse.util.ProductMapper;
+import ru.mediasoft.warehouse.util.ProductSpecification;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -48,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
             productToUpdate.setDescription(dto.getDescription());
         if (dto.getSku() != null)
             productToUpdate.setSku(dto.getSku());
-        if (dto.getQuantity() != null && dto.getQuantity()!=productToUpdate.getQuantity()) {
+        if (dto.getQuantity() != null && dto.getQuantity() != productToUpdate.getQuantity()) {
             productToUpdate.setQuantity(dto.getQuantity());
             productToUpdate.setUpdatedQuantity(LocalDateTime.now());
         }
@@ -80,5 +84,15 @@ public class ProductServiceImpl implements ProductService {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
         repository.deleteById(id);
+    }
+
+    @Override
+    public Collection<ProductDtoOut> multiCriteriaSearch(List<SearchCriteria<?>> criteriaList, Pageable pageable) {
+        final ProductSpecification specification = new ProductSpecification(criteriaList);
+        Page<Product> page = repository.findAll(specification, pageable);
+
+        return page.getContent().stream()
+                .map(ProductMapper::toOut)
+                .collect(Collectors.toList());
     }
 }
