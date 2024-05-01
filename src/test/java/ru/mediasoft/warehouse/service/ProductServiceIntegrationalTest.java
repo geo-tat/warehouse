@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.model.CategoryType;
 import ru.mediasoft.warehouse.model.Product;
 import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.search.criteria.BigDecimalSearchCriteria;
@@ -38,7 +39,7 @@ public class ProductServiceIntegrationalTest {
                 .name("Name")
                 .sku("SKU")
                 .description("Description")
-                .category("Category")
+                .category(CategoryType.CATEGORY)
                 .price(BigDecimal.valueOf(10.0))
                 .quantity(100)
                 .build();
@@ -47,7 +48,7 @@ public class ProductServiceIntegrationalTest {
                 .name("Name2")
                 .sku("SKU2")
                 .description("Description2")
-                .category("Category2")
+                .category(CategoryType.CATEGORY)
                 .price(BigDecimal.valueOf(50.0))
                 .quantity(100)
                 .build();
@@ -55,7 +56,7 @@ public class ProductServiceIntegrationalTest {
                 .name("Name3")
                 .sku("SKU3")
                 .description("Description3")
-                .category("Category")
+                .category(CategoryType.CATEGORY)
                 .price(BigDecimal.valueOf(100.0))
                 .quantity(150)
                 .build();

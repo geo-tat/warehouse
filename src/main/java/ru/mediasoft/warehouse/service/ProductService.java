@@ -18,7 +18,7 @@ public interface ProductService {
 
     ProductDtoOut getById(UUID id);
 
-    Collection<ProductDtoOut> getAll();
+    Collection<ProductDtoOut> getAll(Pageable pageable);
 
     void deleteAll();
 

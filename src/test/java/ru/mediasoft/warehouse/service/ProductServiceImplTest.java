@@ -7,9 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.model.CategoryType;
 import ru.mediasoft.warehouse.model.Product;
 import ru.mediasoft.warehouse.repository.ProductRepository;
 
@@ -33,7 +36,7 @@ public class ProductServiceImplTest {
     private Product product;
     private ProductDtoIn dtoIn;
     private ProductDtoFotUpdate dtoUpdate;
-
+    Pageable pageable = PageRequest.of(0, 10);
     @BeforeEach
     public void setUp() {
         product = Product.builder()
@@ -41,7 +44,7 @@ public class ProductServiceImplTest {
                 .name("Name")
                 .sku("SKU")
                 .description("Description")
-                .category("Category")
+                .category(CategoryType.CATEGORY)
                 .price(BigDecimal.valueOf(10.0))
                 .quantity(100)
                 .build();
@@ -49,7 +52,7 @@ public class ProductServiceImplTest {
                 .name("Name")
                 .sku("SKU")
                 .description("Description")
-                .category("Category")
+                .category(CategoryType.CATEGORY)
                 .price(BigDecimal.valueOf(10.0))
                 .quantity(100)
                 .build();
@@ -57,7 +60,7 @@ public class ProductServiceImplTest {
                 .name("NewName")
                 .sku("NewSKU")
                 .description("NewDescription")
-                .category("NewCategory")
+                .category(CategoryType.CATEGORY)
                 .price(BigDecimal.valueOf(110.0))
                 .quantity(1100)
                 .build();
@@ -103,7 +106,7 @@ public class ProductServiceImplTest {
     public void testGetAllProducts() {
         when(repository.findAll()).thenReturn(Collections.singletonList(product));
 
-        assertEquals(1, productService.getAll().size());
+        assertEquals(1, productService.getAll(pageable).size());
 
     }
 
