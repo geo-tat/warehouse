@@ -33,3 +33,11 @@ logging:
         transaction: INFO
         transaction.interceptor: TRACE
         orm.jpa.JpaTransactionManager: DEBUG
+
+currency-service:
+    host: http://localhost:8081
+    mock: false
+    methods:
+      get-currency: /api/v1/currencies
+
+

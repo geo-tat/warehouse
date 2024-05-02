@@ -9,8 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
+import ru.mediasoft.warehouse.dto.ProductDtoInfo;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.CategoryType;
 import ru.mediasoft.warehouse.model.Product;
@@ -35,7 +36,7 @@ public class ProductServiceImplTest {
 
     private Product product;
     private ProductDtoIn dtoIn;
-    private ProductDtoFotUpdate dtoUpdate;
+    private ProductDtoForUpdate dtoUpdate;
     Pageable pageable = PageRequest.of(0, 10);
     @BeforeEach
     public void setUp() {
@@ -56,7 +57,7 @@ public class ProductServiceImplTest {
                 .price(BigDecimal.valueOf(10.0))
                 .quantity(100)
                 .build();
-        dtoUpdate = ProductDtoFotUpdate.builder()
+        dtoUpdate = ProductDtoForUpdate.builder()
                 .name("NewName")
                 .sku("NewSKU")
                 .description("NewDescription")
@@ -70,11 +71,10 @@ public class ProductServiceImplTest {
     public void testCreateProduct() {
         when(repository.save(any())).thenReturn(product);
 
-        ProductDtoOut createdProduct = productService.create(dtoIn);
+        ProductDtoInfo createdProduct = productService.create(dtoIn);
 
         assertNotNull(createdProduct);
         assertEquals(product.getId(), createdProduct.getId());
-        assertEquals(product.getSku(), createdProduct.getSku());
         assertEquals(product.getName(), createdProduct.getName());
     }
 
@@ -83,10 +83,9 @@ public class ProductServiceImplTest {
         when(repository.findById(product.getId())).thenReturn(Optional.of(product));
         when(repository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ProductDtoOut updatedProduct = productService.update(product.getId(), dtoUpdate);
+        ProductDtoInfo updatedProduct = productService.update(product.getId(), dtoUpdate);
 
         assertNotNull(updatedProduct);
-        assertEquals(dtoUpdate.getSku(), updatedProduct.getSku());
         assertEquals(dtoUpdate.getName(), updatedProduct.getName());
 
     }

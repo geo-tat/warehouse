@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
+import ru.mediasoft.warehouse.dto.ProductDtoInfo;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.Product;
 import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.search.criteria.SearchCriteria;
+import ru.mediasoft.warehouse.service.currency.CurrencyProvider;
 import ru.mediasoft.warehouse.util.ProductMapper;
 import ru.mediasoft.warehouse.util.ProductSpecification;
 
@@ -24,24 +26,25 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
     ProductRepository repository;
+    CurrencyProvider currencyProvider;
 
     @Override
-    public ProductDtoOut create(ProductDtoIn dto) {
+    public ProductDtoInfo create(ProductDtoIn dto) {
         Product productToSave = ProductMapper.toEntity(dto);
         UUID id = UUID.randomUUID();
         productToSave.setId(id);
-        return ProductMapper.toOut(repository.save(productToSave));
+        return ProductMapper.toInfo(repository.save(productToSave));
     }
 
     @Override
-    public ProductDtoOut update(UUID id, ProductDtoFotUpdate dto) {
+    public ProductDtoInfo update(UUID id, ProductDtoForUpdate dto) {
         Product productToUpdate = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
         Product productToSave = updateProduct(dto, productToUpdate);
-        return ProductMapper.toOut(repository.save(productToSave));
+        return ProductMapper.toInfo(repository.save(productToSave));
     }
 
-    private Product updateProduct(ProductDtoFotUpdate dto, Product productToUpdate) {
+    private Product updateProduct(ProductDtoForUpdate dto, Product productToUpdate) {
         if (dto.getCategory() != null)
             productToUpdate.setCategory(dto.getCategory());
         if (dto.getName() != null)
@@ -63,14 +66,14 @@ public class ProductServiceImpl implements ProductService {
     public ProductDtoOut getById(UUID id) {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
-        return ProductMapper.toOut(product);
+        return ProductMapper.toOut(product, currencyProvider);
     }
 
     @Override
     public Collection<ProductDtoOut> getAll(Pageable pageable) {
         Page<Product> list = repository.findAll(pageable);
         return list.stream()
-                .map(ProductMapper::toOut)
+                .map(product -> ProductMapper.toOut(product, currencyProvider))
                 .collect(Collectors.toList());
     }
 
@@ -87,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> page = repository.findAll(specification, pageable);
 
         return page.getContent().stream()
-                .map(ProductMapper::toOut)
+                .map(product -> ProductMapper.toOut(product, currencyProvider))
                 .collect(Collectors.toList());
     }
 }

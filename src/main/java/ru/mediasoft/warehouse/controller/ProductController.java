@@ -8,8 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.mediasoft.warehouse.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.dto.ProductDtoIn;
+import ru.mediasoft.warehouse.dto.ProductDtoInfo;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.search.criteria.SearchCriteria;
 import ru.mediasoft.warehouse.service.ProductService;
@@ -29,13 +30,13 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "Регистрация товара")
-    ProductDtoOut create(@Valid @RequestBody ProductDtoIn dto) {
+    ProductDtoInfo create(@Valid @RequestBody ProductDtoIn dto) {
         return service.create(dto);
     }
 
     @Operation(summary = "Обновление информации о товаре")
     @PatchMapping("/{id}")
-    ProductDtoOut update(@PathVariable UUID id, @RequestBody @Valid ProductDtoFotUpdate dto) {
+    ProductDtoInfo update(@PathVariable UUID id, @RequestBody @Valid ProductDtoForUpdate dto) {
         return service.update(id, dto);
     }
 
