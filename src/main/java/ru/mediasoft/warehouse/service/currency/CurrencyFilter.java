@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mediasoft.warehouse.model.CurrencyType;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -21,9 +22,9 @@ public class CurrencyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String currencyHeader = request.getHeader("currency");
-        if (currencyHeader != null) {
-            currencyProvider.setCurrencyType(CurrencyType.valueOf(currencyHeader));
-        }
+        Optional.ofNullable(currencyHeader)
+                .map(CurrencyType::valueOf)
+                .ifPresent(currencyProvider::setCurrency);
         filterChain.doFilter(request, response);
     }
 }

@@ -12,7 +12,7 @@ import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.Product;
 import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.search.criteria.SearchCriteria;
-import ru.mediasoft.warehouse.service.currency.CurrencyProvider;
+import ru.mediasoft.warehouse.service.currency.ExchangeRateProvider;
 import ru.mediasoft.warehouse.util.ProductMapper;
 import ru.mediasoft.warehouse.util.ProductSpecification;
 
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
     ProductRepository repository;
-    CurrencyProvider currencyProvider;
+    ExchangeRateProvider exchangeRateProvider;
 
     @Override
     public ProductDtoInfo create(ProductDtoIn dto) {
@@ -66,14 +66,14 @@ public class ProductServiceImpl implements ProductService {
     public ProductDtoOut getById(UUID id) {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
-        return ProductMapper.toOut(product, currencyProvider);
+        return ProductMapper.toOut(product, exchangeRateProvider);
     }
 
     @Override
     public Collection<ProductDtoOut> getAll(Pageable pageable) {
         Page<Product> list = repository.findAll(pageable);
         return list.stream()
-                .map(product -> ProductMapper.toOut(product, currencyProvider))
+                .map(product -> ProductMapper.toOut(product, exchangeRateProvider))
                 .collect(Collectors.toList());
     }
 
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> page = repository.findAll(specification, pageable);
 
         return page.getContent().stream()
-                .map(product -> ProductMapper.toOut(product, currencyProvider))
+                .map(product -> ProductMapper.toOut(product, exchangeRateProvider))
                 .collect(Collectors.toList());
     }
 }

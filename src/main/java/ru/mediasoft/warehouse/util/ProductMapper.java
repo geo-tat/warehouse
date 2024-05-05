@@ -4,13 +4,13 @@ import ru.mediasoft.warehouse.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.dto.ProductDtoInfo;
 import ru.mediasoft.warehouse.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.model.Product;
-import ru.mediasoft.warehouse.service.currency.CurrencyProvider;
+import ru.mediasoft.warehouse.service.currency.ExchangeRateProvider;
 
 import java.math.RoundingMode;
 
 public class ProductMapper {
 
-   public static Product toEntity(ProductDtoIn dto) {
+    public static Product toEntity(ProductDtoIn dto) {
         return Product.builder()
                 .name(dto.getName())
                 .sku(dto.getSku())
@@ -21,25 +21,25 @@ public class ProductMapper {
                 .build();
     }
 
-   public static ProductDtoOut toOut(Product product, CurrencyProvider provider) {
+    public static ProductDtoOut toOut(Product product, ExchangeRateProvider provider) {
         return ProductDtoOut.builder()
                 .id(product.getId())
                 .name(product.getName())
-                .price(product.getPrice().divide(provider.getCurrencyFromWeb(), RoundingMode.HALF_UP))
+                .price(product.getPrice().divide(provider.getExchangeRate(), RoundingMode.HALF_UP))
                 .sku(product.getSku())
                 .category(product.getCategory())
                 .description(product.getDescription())
                 .quantity(product.getQuantity())
                 .created(product.getCreated())
                 .updated(product.getUpdatedQuantity())
-                .currencyType(provider.getCurrencyType())
+                .currencyType(provider.getCurrencyProvider().getCurrency())
                 .build();
     }
 
     public static ProductDtoInfo toInfo(Product product) {
-       return ProductDtoInfo.builder()
-               .id(product.getId())
-               .name(product.getName())
-               .build();
+        return ProductDtoInfo.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .build();
     }
 }

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import ru.mediasoft.warehouse.model.Currency;
+import ru.mediasoft.warehouse.model.ExchangeRate;
 
 import java.math.BigDecimal;
 import java.util.Random;
@@ -13,14 +13,14 @@ import java.util.Random;
 @Component
 @Slf4j
 @Primary
-public class CurrencyServiceClientMock implements CurrencyClientService {
+public class CurrencyServiceMockClient implements CurrencyServiceClient {
     @Override
-    public Currency getCurrency() {
+    public ExchangeRate getCurrency() {
         log.info("Работает заглушка, генератор курса валют");
-        Currency currencyMock = new Currency();
-        currencyMock.setCNY(BigDecimal.valueOf(new Random().nextInt(200)));
-        currencyMock.setEUR(BigDecimal.valueOf(new Random().nextInt(200)));
-        currencyMock.setUSD(BigDecimal.valueOf(new Random().nextInt(200)));
-        return currencyMock;
+        ExchangeRate exchangeRateMock = new ExchangeRate();
+        exchangeRateMock.setCNY(BigDecimal.valueOf(new Random().nextInt(200)));
+        exchangeRateMock.setEUR(BigDecimal.valueOf(new Random().nextInt(200)));
+        exchangeRateMock.setUSD(BigDecimal.valueOf(new Random().nextInt(200)));
+        return exchangeRateMock;
     }
 }

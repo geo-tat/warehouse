@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Currency {
+public class ExchangeRate {
     private BigDecimal CNY;
     private BigDecimal EUR;
     private BigDecimal USD;
