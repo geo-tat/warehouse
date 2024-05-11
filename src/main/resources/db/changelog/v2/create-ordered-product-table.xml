@@ -7,10 +7,16 @@
     <changeSet id="5" author="geo-tat">
         <createTable tableName="ordered_product">
             <column name="order_id" type="uuid">
-                <constraints nullable="false"/>
+                <constraints nullable="false"
+                             foreignKeyName="fk_order_product"
+                             referencedTableName="orders"
+                             referencedColumnNames="id"/>
             </column>
             <column name="product_id" type="uuid">
-                <constraints nullable="false"/>
+                <constraints nullable="false"
+                             foreignKeyName="fk_product_order"
+                             referencedTableName="product"
+                             referencedColumnNames="id"/>
             </column>
             <column name="status" type="varchar(255)">
                 <constraints nullable="false"/>

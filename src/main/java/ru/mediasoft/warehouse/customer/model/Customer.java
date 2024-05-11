@@ -23,6 +23,8 @@ public class Customer {
     @Column(name = "email")
     @NotNull
    private String email;
+    @NotNull
+    private boolean isActive;
 
 
 }

@@ -10,7 +10,10 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="customer_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints nullable="false"
+                             foreignKeyName="fk_order_customer"
+                             referencedTableName="customer"
+                             referencedColumnNames="id"/>
             </column>
             <column name="status" type="varchar(255)">
                 <constraints nullable="false"/>
