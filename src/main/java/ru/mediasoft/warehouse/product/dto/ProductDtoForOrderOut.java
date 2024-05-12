@@ -1,23 +1,17 @@
 package ru.mediasoft.warehouse.product.dto;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @Builder
 public class ProductDtoForOrderOut {
-
-    private UUID id;
-
+    private UUID uuid;
     private String name;
-
-    private int quantity;
-
+    private Integer quantity;
     private BigDecimal price;
 
 }

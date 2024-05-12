@@ -2,7 +2,6 @@ package ru.mediasoft.warehouse.order.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.mediasoft.warehouse.order.OrderStatus;
 import ru.mediasoft.warehouse.product.model.Product;
 
 import java.math.BigDecimal;

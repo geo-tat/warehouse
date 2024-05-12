@@ -1,4 +1,4 @@
-package ru.mediasoft.warehouse.order;
+package ru.mediasoft.warehouse.order.model;
 
 public enum OrderStatus {
     CREATED,

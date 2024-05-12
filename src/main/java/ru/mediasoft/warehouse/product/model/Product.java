@@ -20,7 +20,6 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Product {
 
     @Id

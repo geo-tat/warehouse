@@ -31,7 +31,7 @@ public class ErrorHandler {
         log.error("Товар с данным артикулом уже есть в базе данных", e);
         return new ErrorResponse(e.getClass().getSimpleName(),
                 Arrays.stream(e.getStackTrace()).findFirst().toString(),
-                "Товар с данным артикулом уже есть в базе данных",
+                e.getMessage(),
                 LocalDateTime.now());
     }
 

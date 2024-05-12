@@ -1,10 +1,11 @@
-package ru.mediasoft.warehouse.order;
+package ru.mediasoft.warehouse.order.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.mediasoft.warehouse.order.dto.OrderDtoIn;
 import ru.mediasoft.warehouse.order.dto.OrderDtoOut;
+import ru.mediasoft.warehouse.order.model.OrderStatus;
 import ru.mediasoft.warehouse.order.service.OrderService;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderIn;
 

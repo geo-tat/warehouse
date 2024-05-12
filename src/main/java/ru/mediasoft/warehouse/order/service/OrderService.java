@@ -1,6 +1,6 @@
 package ru.mediasoft.warehouse.order.service;
 
-import ru.mediasoft.warehouse.order.OrderStatus;
+import ru.mediasoft.warehouse.order.model.OrderStatus;
 import ru.mediasoft.warehouse.order.dto.OrderDtoIn;
 import ru.mediasoft.warehouse.order.dto.OrderDtoOut;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderIn;

@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import ru.mediasoft.warehouse.customer.model.Customer;
-import ru.mediasoft.warehouse.order.OrderStatus;
 
 import java.util.UUID;
 

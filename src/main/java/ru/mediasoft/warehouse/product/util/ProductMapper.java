@@ -1,6 +1,5 @@
 package ru.mediasoft.warehouse.product.util;
 
-import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderOut;
 import ru.mediasoft.warehouse.product.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.product.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.product.model.Product;
@@ -32,16 +31,5 @@ public class ProductMapper {
                 .updated(product.getUpdatedQuantity())
                 .isAvailable(product.isAvailable())
                 .build();
-    }
-
-    public static ProductDtoForOrderOut toProductDtoForOrderOut(Product product) {
-       return ProductDtoForOrderOut.builder()
-               .id(product.getId())
-               .name(product.getName())
-               .quantity(product.getQuantity())
-               .price(product.getPrice())
-               .build();
-
-
     }
 }
