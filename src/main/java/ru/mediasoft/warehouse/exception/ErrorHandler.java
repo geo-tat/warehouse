@@ -47,8 +47,8 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public ErrorResponse handleQuantityValidateException(QuantityIsNotValidException e) {
-        log.error("Не хватает количества товара на складе", e);
+    public ErrorResponse handleOrderIsNotValidException(final OrderIsNotValidException e) {
+        log.error("Ошибка валидации заказа", e);
         return new ErrorResponse(e.getClass().getSimpleName(),
                 Arrays.stream(e.getStackTrace()).findFirst().toString(),
                 e.getMessage(),
@@ -57,7 +57,7 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
-    public ErrorResponse handleCustomerAccessException(CustomerAccessException e) {
+    public ErrorResponse handleCustomerAccessException(final CustomerAccessException e) {
         log.error("Пользователь редактирует чужой заказ", e);
         return new ErrorResponse(e.getClass().getSimpleName(),
                 Arrays.stream(e.getStackTrace()).findFirst().toString(),
@@ -67,7 +67,7 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
-    public ErrorResponse handleOrderStatusValidException(OrderStatusValidException e) {
+    public ErrorResponse handleOrderStatusValidException(final OrderStatusValidException e) {
         log.error("Статус заказа запрещает редактирование", e);
         return new ErrorResponse(e.getClass().getSimpleName(),
                 Arrays.stream(e.getStackTrace()).findFirst().toString(),

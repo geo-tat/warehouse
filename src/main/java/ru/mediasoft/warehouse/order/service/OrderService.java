@@ -1,8 +1,8 @@
 package ru.mediasoft.warehouse.order.service;
 
-import ru.mediasoft.warehouse.order.model.OrderStatus;
 import ru.mediasoft.warehouse.order.dto.OrderDtoIn;
 import ru.mediasoft.warehouse.order.dto.OrderDtoOut;
+import ru.mediasoft.warehouse.order.model.OrderStatus;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderIn;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface OrderService {
 
     void deleteByOrderId(long customerId, UUID orderId);
 
-    String changeOrderStatus(UUID orderId, OrderStatus status);
+    void changeOrderStatus(UUID orderId, OrderStatus status);
 
-    String confirm(long customerId, UUID orderId);
+    void confirm(long customerId, UUID orderId);
 }

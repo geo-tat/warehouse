@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mediasoft.warehouse.customer.model.Customer;
 import ru.mediasoft.warehouse.customer.repository.CustomerRepository;
 import ru.mediasoft.warehouse.exception.CustomerAccessException;
+import ru.mediasoft.warehouse.exception.OrderIsNotValidException;
 import ru.mediasoft.warehouse.exception.OrderStatusValidException;
 import ru.mediasoft.warehouse.order.dto.OrderDtoIn;
 import ru.mediasoft.warehouse.order.dto.OrderDtoOut;
-import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderOut;
 import ru.mediasoft.warehouse.order.model.Order;
 import ru.mediasoft.warehouse.order.model.OrderStatus;
 import ru.mediasoft.warehouse.order.model.OrderedProduct;
@@ -19,12 +19,12 @@ import ru.mediasoft.warehouse.order.repository.OrderRepository;
 import ru.mediasoft.warehouse.order.repository.OrderedProductRepository;
 import ru.mediasoft.warehouse.order.util.OrderMapper;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderIn;
+import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderOut;
 import ru.mediasoft.warehouse.product.dto.ProductDtoFotUpdate;
 import ru.mediasoft.warehouse.product.model.Product;
 import ru.mediasoft.warehouse.product.repository.ProductRepository;
 import ru.mediasoft.warehouse.product.service.ProductService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,37 +46,33 @@ public class OrderServiceImpl implements OrderService {
         Customer customer = getCustomer(customerId);       // проверка на наличие пользователя в бд
         Map<UUID, Integer> orderMap = dto.getProducts().stream()
                 .collect(Collectors.toMap(ProductDtoForOrderIn::getId, ProductDtoForOrderIn::getQuantity));
-        List<Product> productsFromWarehouse = availability(orderMap);    // проверка на наличие товара на складе и его количества
-        List<Product> productToSave = quantityUpdate(productsFromWarehouse, orderMap); // перерасчет количества товара
-        Order order = orderRepository.save(Order.builder()
+        Order order = Order.builder()
                 .deliveryAddress(dto.getDeliveryAddress())
                 .status(OrderStatus.CREATED)
                 .customer(customer)
-                .build());
+                .build();
+        List<OrderedProduct> orderedProductList = makingOrderedProduct(order, orderMap);
+        order.setOrderedProducts(orderedProductList);
+        orderRepository.save(order);
 
-        holdingOrderedProducts(order, productToSave, orderMap);  // заполнили таблицу ORDERED_PRODUCT
         return order.getId();
     }
 
     @Transactional
     @Override
     public UUID update(long customerId, UUID orderId, List<ProductDtoForOrderIn> products) {
-        Customer customer = getCustomer(customerId);
         Order order = getOrder(orderId);
         validationForAdministration(order, customerId);     // проверка прав доступа
-
         Map<UUID, Integer> orderMap = products.stream()
                 .collect(Collectors.toMap(ProductDtoForOrderIn::getId, ProductDtoForOrderIn::getQuantity));
-        List<Product> productsFromWarehouse = availability(orderMap);  // проверка на наличие товара на складе и его количества
-        List<Product> productToSave = quantityUpdate(productsFromWarehouse, orderMap); // перерасчет количества товара
-        updateOrderedProducts(order, productToSave, orderMap);     // обновляем данные в ORDERED_PRODUCT
+        updateOrderedProducts(order, orderMap);     // обновляем данные в ORDERED_PRODUCT
+        orderRepository.save(order);
         return orderId;
     }
 
     @Transactional(readOnly = true)
     @Override
     public OrderDtoOut getByOrderId(long customerId, UUID orderId) {
-        Customer customer = getCustomer(customerId);
         Order order = getOrder(orderId);
         validationForAdministration(order, customerId);     // проверка прав доступа
         List<ProductDtoForOrderOut> list = orderedProductRepository.findAllWhereOrderId(orderId);
@@ -86,17 +82,16 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void deleteByOrderId(long customerId, UUID orderId) {
-        Customer customer = getCustomer(customerId);
         Order order = getOrder(orderId);
         validationForAdministration(order, customerId);     // проверка прав доступа
 
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
-        rollbackProducts(orderId);     // возврат продуктов на склад
+        rollbackProducts(order);     // возврат продуктов на склад
     }
 
-    private void rollbackProducts(UUID orderId) {
-        List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(orderId);
+    private void rollbackProducts(Order order) {
+        List<OrderedProduct> orderedProducts = order.getOrderedProducts();
         for (OrderedProduct orderedProduct : orderedProducts) {
             ProductDtoFotUpdate productToSave = ProductDtoFotUpdate.builder()
                     .quantity(orderedProduct.getQuantity() + orderedProduct.getProduct().getQuantity())
@@ -108,16 +103,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String changeOrderStatus(UUID orderId, OrderStatus status) {
+    public void changeOrderStatus(UUID orderId, OrderStatus status) {
         Order order = getOrder(orderId);
         order.setStatus(status);
         orderRepository.save(order);
-        return "";
     }
 
     @Override
-    public String confirm(long customerId, UUID orderId) {
-        return "";
+    public void confirm(long customerId, UUID orderId) {
     }
 
     private Customer getCustomer(long customerId) {
@@ -139,63 +132,72 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Заказа с данным Id нет в базе данных: " + orderId));
     }
 
-    private void holdingOrderedProducts(Order order, List<Product> productToSave, Map<UUID, Integer> orderMap) {
-        for (Product product : productToSave) {
-            orderedProductRepository.save(OrderedProduct.builder()
-                    .id(OrderedProductId.builder()
-                            .productId(product.getId())
-                            .orderId(order.getId()).build())
-                    .product(product)
-                    .order(order)
-                    .quantity(orderMap.get(product.getId()))
-                    .price(product.getPrice())
-                    .status(OrderStatus.CREATED)
-                    .build());
+    private List<OrderedProduct> makingOrderedProduct(Order order, Map<UUID, Integer> orderMap) {
+        return productRepository.findAllById(orderMap.keySet()).stream()
+                .peek(product -> {
+                    productValidator(product, orderMap);   // проверка на наличие и доступность товаров
+                    quantityUpdate(product, orderMap);     // изменение количества товаров
+                })
+                .map(product -> OrderedProduct.builder()
+                        .order(order)
+                        .product(product)
+                        .status(OrderStatus.CREATED)
+                        .price(product.getPrice())
+                        .quantity(orderMap.get(product.getId()))
+                        .id(OrderedProductId.builder()
+                                .orderId(order.getId())
+                                .productId(product.getId())
+                                .build())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private void quantityUpdate(Product product, Map<UUID, Integer> orderMap) {
+        int newQuantity = product.getQuantity() - orderMap.get(product.getId());
+        product.setQuantity(newQuantity);
+    }
+
+    private void productValidator(Product product, Map<UUID, Integer> orders) {
+        if (!product.isAvailable()) {
+            throw new OrderIsNotValidException("Товар с id= " + product.getId() + " не доступен на складе");
+        }
+        if (product.getQuantity() < orders.get(product.getId())) {
+            throw new OrderIsNotValidException("Количество товара с id= " + product.getId() + " недостаточно для оформления заказа");
         }
     }
 
-    private List<Product> quantityUpdate(List<Product> products, Map<UUID, Integer> orderMap) {
-        int newQuantity = 0;
-        for (Product product : products) {
-            newQuantity = product.getQuantity() - orderMap.get(product.getId());
-            product.setQuantity(newQuantity);
-        }
-        return products;
-    }
-
-    private List<Product> availability(Map<UUID, Integer> orders) {
-        List<UUID> ids = orders.keySet().stream().toList();
-        List<Integer> quantities = orders.values().stream().toList();
-        List<Product> products = productRepository.findAllByIdInAndIsAvailableTrue(ids);
-        List<Product> finalProductList = new ArrayList<>();
-        for (Product product : products) {
-            if (orders.get(product.getId()) <= product.getQuantity())
-                finalProductList.add(product);
-        }
-        return finalProductList;
-    }
-
-    private void updateOrderedProducts(Order order, List<Product> productToSave, Map<UUID, Integer> orderMap) {
-        List<OrderedProduct> oldOrderedProducts = orderedProductRepository.findAllByOrderId(order.getId());
-        Map<UUID, Integer> oldProductsHashMap = oldOrderedProducts.stream()
+    private void updateOrderedProducts(Order order, Map<UUID, Integer> orderMap) {
+        Map<UUID, OrderedProduct> oldOrderedProducts = order.getOrderedProducts().stream()
                 .collect(Collectors.toMap(
                         orderedProduct -> orderedProduct.getProduct().getId(),
-                        OrderedProduct::getQuantity));
+                        orderedProduct -> orderedProduct));
 
-        for (Product product : productToSave) {
-            int newQuantity = orderMap.get(product.getId()) + oldProductsHashMap.getOrDefault(product.getId(), 0);
-            OrderedProduct op = OrderedProduct.builder()
-                    .id(OrderedProductId.builder()
-                            .productId(product.getId())
-                            .orderId(order.getId())
-                            .build())
-                    .product(product)
-                    .quantity(newQuantity)
-                    .price(product.getPrice())
-                    .status(order.getStatus())
-                    .order(order)
-                    .build();
-            orderedProductRepository.save(op);
-        }
+        productRepository.findAllById(orderMap.keySet()).forEach(product -> {
+            productValidator(product, orderMap); // проверка на наличие и доступность товаров
+            quantityUpdate(product, orderMap);   // изменение количества товаров
+
+            UUID productId = product.getId();
+            int newQuantity = orderMap.get(productId);
+            OrderedProduct orderedProduct = oldOrderedProducts.get(productId);
+
+            if (orderedProduct != null) {
+                newQuantity += orderedProduct.getQuantity();
+                orderedProduct.setQuantity(newQuantity);      // обновление существующего orderedProduct
+            } else {
+                orderedProduct = OrderedProduct.builder()
+                        .id(OrderedProductId.builder()
+                                .productId(productId)
+                                .orderId(order.getId())
+                                .build())
+                        .product(product)
+                        .order(order)
+                        .price(product.getPrice())
+                        .status(OrderStatus.CREATED)
+                        .quantity(newQuantity)
+                        .build();
+                order.getOrderedProducts().add(orderedProduct);  // добавление нового orderedProduct
+            }
+        });
     }
+
 }

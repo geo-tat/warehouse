@@ -3,10 +3,10 @@ package ru.mediasoft.warehouse.exception;
 import lombok.Getter;
 
 @Getter
-public class OrderStatusValidException extends RuntimeException {
+public class OrderIsNotValidException extends RuntimeException {
     private final String message;
 
-    public OrderStatusValidException(String message) {
+    public OrderIsNotValidException(String message) {
         this.message = message;
     }
 }

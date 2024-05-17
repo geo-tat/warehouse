@@ -1,6 +1,9 @@
 package ru.mediasoft.warehouse.order.dto;
 
-import lombok.*;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderIn;
 
 import java.util.List;
