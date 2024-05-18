@@ -36,3 +36,12 @@ app:
     priceIncreasePercentage: 10.1
     optimization:
       enabled: false
+
+rest:
+  currency-service:
+    host: http://localhost:8081
+    mock:
+      enabled: false
+    methods:
+      get-currency: /api/v1/currencies
+
