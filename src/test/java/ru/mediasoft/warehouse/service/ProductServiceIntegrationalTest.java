@@ -15,6 +15,7 @@ import ru.mediasoft.warehouse.repository.ProductRepository;
 import ru.mediasoft.warehouse.search.criteria.BigDecimalSearchCriteria;
 import ru.mediasoft.warehouse.search.criteria.StringSearchCriteria;
 import ru.mediasoft.warehouse.search.enums.OperationType;
+import ru.mediasoft.warehouse.service.currency.ExchangeRateProvider;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import java.util.List;
 public class ProductServiceIntegrationalTest {
     @Autowired
     ProductRepository repositoryTest;
+    @Autowired
+    ExchangeRateProvider exchangeRateProvider;
 
     ProductService service;
 
@@ -33,7 +36,7 @@ public class ProductServiceIntegrationalTest {
 
     @BeforeEach
     void setUp() {
-        service = new ProductServiceImpl(repositoryTest);
+        service = new ProductServiceImpl(repositoryTest, exchangeRateProvider);
 
         Product product = Product.builder()
                 .name("Name")

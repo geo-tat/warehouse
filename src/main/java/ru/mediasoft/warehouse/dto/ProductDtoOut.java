@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.mediasoft.warehouse.model.CategoryType;
+import ru.mediasoft.warehouse.model.CurrencyType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -36,4 +37,6 @@ public class ProductDtoOut {
     @Schema(description = "Дата создания")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate created;
+    @Schema(description = "Валюта")
+    private CurrencyType currencyType;
 }

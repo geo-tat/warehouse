@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 @Schema(description = "Информация о внесении изменений в товар товаре.")
-public class ProductDtoFotUpdate {
+public class ProductDtoForUpdate {
     @Schema(description = "Артикул")
     private String sku;
 
