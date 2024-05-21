@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.mediasoft.warehouse.product.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.product.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.product.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.product.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.product.model.Product;
@@ -34,14 +34,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDtoOut update(UUID id, ProductDtoFotUpdate dto) {
+    public ProductDtoOut update(UUID id, ProductDtoForUpdate dto) {
         Product productToUpdate = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
         Product productToSave = updateProduct(dto, productToUpdate);
         return ProductMapper.toOut(repository.save(productToSave));
     }
 
-    private Product updateProduct(ProductDtoFotUpdate dto, Product productToUpdate) {
+    private Product updateProduct(ProductDtoForUpdate dto, Product productToUpdate) {
         if (dto.getCategory() != null)
             productToUpdate.setCategory(dto.getCategory());
         if (dto.getName() != null)

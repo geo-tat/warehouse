@@ -20,7 +20,7 @@ import ru.mediasoft.warehouse.order.repository.OrderedProductRepository;
 import ru.mediasoft.warehouse.order.util.OrderMapper;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderIn;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForOrderOut;
-import ru.mediasoft.warehouse.product.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.product.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.product.model.Product;
 import ru.mediasoft.warehouse.product.repository.ProductRepository;
 import ru.mediasoft.warehouse.product.service.ProductService;
@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
     private void rollbackProducts(Order order) {
         List<OrderedProduct> orderedProducts = order.getOrderedProducts();
         for (OrderedProduct orderedProduct : orderedProducts) {
-            ProductDtoFotUpdate productToSave = ProductDtoFotUpdate.builder()
+            ProductDtoForUpdate productToSave = ProductDtoForUpdate.builder()
                     .quantity(orderedProduct.getQuantity() + orderedProduct.getProduct().getQuantity())
                     .build();
             productService.update(orderedProduct.getProduct().getId(), productToSave);

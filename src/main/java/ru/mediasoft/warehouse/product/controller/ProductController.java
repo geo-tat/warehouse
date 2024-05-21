@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.mediasoft.warehouse.product.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.product.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.product.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.product.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.product.search.criteria.SearchCriteria;
@@ -35,7 +35,7 @@ public class ProductController {
 
     @Operation(summary = "Обновление информации о товаре")
     @PatchMapping("/{id}")
-    ProductDtoOut update(@PathVariable UUID id, @RequestBody @Valid ProductDtoFotUpdate dto) {
+    ProductDtoOut update(@PathVariable UUID id, @RequestBody @Valid ProductDtoForUpdate dto) {
         return service.update(id, dto);
     }
 

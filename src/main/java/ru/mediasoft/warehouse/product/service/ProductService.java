@@ -1,7 +1,7 @@
 package ru.mediasoft.warehouse.product.service;
 
 import org.springframework.data.domain.Pageable;
-import ru.mediasoft.warehouse.product.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.product.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.product.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.product.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.product.search.criteria.SearchCriteria;
@@ -14,7 +14,7 @@ public interface ProductService {
 
     ProductDtoOut create(ProductDtoIn dto);
 
-    ProductDtoOut update(UUID id, ProductDtoFotUpdate dto);
+    ProductDtoOut update(UUID id, ProductDtoForUpdate dto);
 
     ProductDtoOut getById(UUID id);
 
