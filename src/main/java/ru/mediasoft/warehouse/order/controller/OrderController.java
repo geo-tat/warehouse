@@ -61,15 +61,15 @@ public class OrderController {
 
     @PostMapping("/{orderId}/confirm")
     void confirm(@RequestHeader("customerId") long customerId,
-                 @PathVariable UUID orderId) {
-        service.confirm(customerId, orderId);
+                   @PathVariable UUID orderId) {
+         service.confirm(customerId, orderId);
     }
 
     @PatchMapping("/{orderId}/status ")
     void changeOrderStatus(@PathVariable UUID orderId,
-                           @RequestHeader("status") OrderStatus status) {
+                             @RequestHeader("status") OrderStatus status) {
 
-        service.changeOrderStatus(orderId, status);
+         service.changeOrderStatus(orderId, status);
     }
 
     @GetMapping("/info")
