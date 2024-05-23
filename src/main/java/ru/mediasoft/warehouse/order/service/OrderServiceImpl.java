@@ -131,10 +131,6 @@ public class OrderServiceImpl implements OrderService {
         Map<String, String> accounts = getAccount(logins);
         Map<String, String> uins = getUins(logins);
 
-        List<OrderedProduct> orderedProducts = orders.stream()
-                .flatMap(order -> order.getOrderedProducts().stream()).toList();
-
-
         return orders.stream()
                 .flatMap(order -> order.getOrderedProducts().stream())
                 .collect(Collectors.groupingBy(
