@@ -4,6 +4,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-<include file="v1/create-table-products.xml" relativeToChangelogFile="true"/>
-
+    <include file="v1/create-table-products.xml" relativeToChangelogFile="true"/>
+    <include file="v2/rename-product-table.xml" relativeToChangelogFile="true"/>
+    <include file="v2/create-customer-table.xml" relativeToChangelogFile="true"/>
+    <include file="v2/create-order-table.xml" relativeToChangelogFile="true"/>
+    <include file="v2/create-ordered-product-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
