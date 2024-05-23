@@ -1,0 +1,47 @@
+package ru.mediasoft.warehouse.product.dto;
+
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import ru.mediasoft.warehouse.product.model.CategoryType;
+
+import java.math.BigDecimal;
+
+
+@Getter
+@Setter
+@Builder
+@Schema(description = "Информация о поступающем на склад товаре.")
+public class ProductDtoIn {
+    @NotBlank(message = "Должен быть указан артикул")
+    @Schema(description = "Артикул")
+    private String sku;
+
+    @NotBlank(message = "Должно быть указано название")
+    @Schema(description = "Название")
+    private String name;
+    @Schema(description = "Описание товара")
+    private String description;
+
+    @NotNull(message = "Должна быть указана категория товара")
+    @Schema(description = "Категория товара")
+    private CategoryType category;
+
+    @NotNull(message = "Должна быть указана цена")
+    @Schema(description = "Цена товара")
+    @PositiveOrZero(message = "Цена не может быть отрицательной величиной")
+    private BigDecimal price;
+
+    @NotNull
+    @Schema(description = "Количество товара")
+    @PositiveOrZero(message = "Количество не может быть отрицательной величиной")
+    private int quantity;
+    @NotNull
+    @Schema(description = "Доступен для заказа")
+    private boolean isAvailable;
+}

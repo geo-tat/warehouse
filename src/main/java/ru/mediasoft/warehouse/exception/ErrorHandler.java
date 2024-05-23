@@ -18,7 +18,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleEntityNotFoundException(final EntityNotFoundException e) {
-        log.error("Пользователь с данным ID не найден.", e);
+        log.error("Сущность с данным ID не найдена.", e);
         return new ErrorResponse(e.getClass().getSimpleName(),
                 Arrays.stream(e.getStackTrace()).findFirst().toString(),
                 e.getMessage(),
@@ -31,7 +31,7 @@ public class ErrorHandler {
         log.error("Товар с данным артикулом уже есть в базе данных", e);
         return new ErrorResponse(e.getClass().getSimpleName(),
                 Arrays.stream(e.getStackTrace()).findFirst().toString(),
-                "Товар с данным артикулом уже есть в базе данных",
+                e.getMessage(),
                 LocalDateTime.now());
     }
 
@@ -44,4 +44,35 @@ public class ErrorHandler {
                 e.getMessage(),
                 LocalDateTime.now());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResponse handleOrderIsNotValidException(final OrderIsNotValidException e) {
+        log.error("Ошибка валидации заказа", e);
+        return new ErrorResponse(e.getClass().getSimpleName(),
+                Arrays.stream(e.getStackTrace()).findFirst().toString(),
+                e.getMessage(),
+                LocalDateTime.now());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    public ErrorResponse handleCustomerAccessException(final CustomerAccessException e) {
+        log.error("Пользователь редактирует чужой заказ", e);
+        return new ErrorResponse(e.getClass().getSimpleName(),
+                Arrays.stream(e.getStackTrace()).findFirst().toString(),
+                e.getMessage(),
+                LocalDateTime.now());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    public ErrorResponse handleOrderStatusValidException(final OrderStatusValidException e) {
+        log.error("Статус заказа запрещает редактирование", e);
+        return new ErrorResponse(e.getClass().getSimpleName(),
+                Arrays.stream(e.getStackTrace()).findFirst().toString(),
+                e.getMessage(),
+                LocalDateTime.now());
+    }
+
 }

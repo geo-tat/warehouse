@@ -8,14 +8,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
-import ru.mediasoft.warehouse.dto.ProductDtoOut;
-import ru.mediasoft.warehouse.model.CategoryType;
-import ru.mediasoft.warehouse.model.Product;
-import ru.mediasoft.warehouse.repository.ProductRepository;
-import ru.mediasoft.warehouse.search.criteria.BigDecimalSearchCriteria;
-import ru.mediasoft.warehouse.search.criteria.StringSearchCriteria;
-import ru.mediasoft.warehouse.search.enums.OperationType;
-import ru.mediasoft.warehouse.service.currency.ExchangeRateProvider;
+import ru.mediasoft.warehouse.product.dto.ProductDtoOut;
+import ru.mediasoft.warehouse.product.model.CategoryType;
+import ru.mediasoft.warehouse.product.model.Product;
+import ru.mediasoft.warehouse.product.repository.ProductRepository;
+import ru.mediasoft.warehouse.product.search.criteria.BigDecimalSearchCriteria;
+import ru.mediasoft.warehouse.product.search.criteria.StringSearchCriteria;
+import ru.mediasoft.warehouse.product.search.enums.OperationType;
+import ru.mediasoft.warehouse.product.service.ProductService;
+import ru.mediasoft.warehouse.product.service.ProductServiceImpl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,8 +28,6 @@ import java.util.List;
 public class ProductServiceIntegrationalTest {
     @Autowired
     ProductRepository repositoryTest;
-    @Autowired
-    ExchangeRateProvider exchangeRateProvider;
 
     ProductService service;
 
@@ -36,7 +35,7 @@ public class ProductServiceIntegrationalTest {
 
     @BeforeEach
     void setUp() {
-        service = new ProductServiceImpl(repositoryTest, exchangeRateProvider);
+        service = new ProductServiceImpl(repositoryTest);
 
         Product product = Product.builder()
                 .name("Name")
