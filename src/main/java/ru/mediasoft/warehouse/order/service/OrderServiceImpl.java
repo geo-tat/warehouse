@@ -4,6 +4,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mediasoft.warehouse.account.AccountProvider;
+import ru.mediasoft.warehouse.crm.CrmProvider;
+import ru.mediasoft.warehouse.customer.dto.CustomerInfo;
 import ru.mediasoft.warehouse.customer.model.Customer;
 import ru.mediasoft.warehouse.customer.repository.CustomerRepository;
 import ru.mediasoft.warehouse.exception.CustomerAccessException;
@@ -11,6 +14,7 @@ import ru.mediasoft.warehouse.exception.OrderIsNotValidException;
 import ru.mediasoft.warehouse.exception.OrderStatusValidException;
 import ru.mediasoft.warehouse.order.dto.OrderDtoIn;
 import ru.mediasoft.warehouse.order.dto.OrderDtoOut;
+import ru.mediasoft.warehouse.order.dto.OrderInfo;
 import ru.mediasoft.warehouse.order.model.Order;
 import ru.mediasoft.warehouse.order.model.OrderStatus;
 import ru.mediasoft.warehouse.order.model.OrderedProduct;
@@ -27,7 +31,9 @@ import ru.mediasoft.warehouse.product.service.ProductService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderedProductRepository orderedProductRepository;
     private final ProductService productService;
+    private final AccountProvider accountProvider;
+    private final CrmProvider crmProvider;
 
     @Transactional
     @Override
@@ -111,6 +119,43 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void confirm(long customerId, UUID orderId) {
+    }
+
+    @Override
+    public Map<UUID, List<OrderInfo>> getOrderInfoByProduct() {
+        List<Order> orders = orderRepository.findAllByStatusIn(List.of(OrderStatus.CREATED, OrderStatus.CONFIRMED));
+        Set<String> logins = orders.stream()
+                .map(order -> order.getCustomer().getLogin())
+                .collect(Collectors.toSet());
+
+        Map<String, String> accounts = getAccount(logins);
+        Map<String, String> uins = getUins(logins);
+
+        List<OrderedProduct> orderedProducts = orders.stream()
+                .flatMap(order -> order.getOrderedProducts().stream()).toList();
+
+
+        return orders.stream()
+                .flatMap(order -> order.getOrderedProducts().stream())
+                .collect(Collectors.groupingBy(
+                        orderedProduct -> orderedProduct.getProduct().getId(),
+                        Collectors.mapping(orderedProduct -> {
+                            Order order = orderedProduct.getOrder();
+                            Customer customer = order.getCustomer();
+                            return OrderInfo.builder()
+                                    .id(order.getId())
+                                    .status(order.getStatus())
+                                    .deliveryAddress(order.getDeliveryAddress())
+                                    .quantity(orderedProduct.getQuantity())
+                                    .customer(CustomerInfo.builder()
+                                            .id(customer.getId())
+                                            .accountNumber(accounts.get(customer.getLogin()))
+                                            .email(customer.getEmail())
+                                            .inn(uins.get(customer.getLogin()))
+                                            .build())
+                                    .build();
+                        }, Collectors.toList())
+                ));
     }
 
     private Customer getCustomer(long customerId) {
@@ -198,6 +243,16 @@ public class OrderServiceImpl implements OrderService {
                 order.getOrderedProducts().add(orderedProduct);  // добавление нового orderedProduct
             }
         });
+    }
+
+    private Map<String, String> getUins(Set<String> logins) {
+        CompletableFuture<Map<String, String>> uins = crmProvider.getInns(logins);
+        return uins.join();
+    }
+
+    private Map<String, String> getAccount(Set<String> logins) {
+        CompletableFuture<Map<String, String>> accounts = accountProvider.getAccount(logins);
+        return accounts.join();
     }
 
 }

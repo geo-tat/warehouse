@@ -1,6 +1,6 @@
 spring:
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:db/changelog/db.changelog-master.xml
   profiles:
     active: dev
@@ -39,6 +39,18 @@ app:
       enabled: false
 
 rest:
+  crm-service:
+    host: http://localhost:8083
+    mock:
+      enabled: false
+    methods:
+      get-uin: /crm
+  account-service:
+    host: http://localhost:8082
+    mock:
+      enabled: false
+    methods:
+      get-account: /account
   currency-service:
     host: http://localhost:8081
     mock:

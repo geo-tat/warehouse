@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +43,8 @@ public class Customer {
     private boolean isActive;
 
     @OneToMany
-    List<Order> orderList;
+    @Transient
+    private List<Order> orderList;
 
 
 }

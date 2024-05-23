@@ -9,12 +9,28 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class WebClientConfig {
 
-    private final RestProperties properties;
+    private final RestCurrencyProperties currencyProperties;
+    private final RestAccountProperties accountProperties;
+    private final RestCrmProperties crmProperties;
 
-    @Bean
-    public WebClient webClient() {
+    @Bean(name = "currencyWebClient")
+    public WebClient currencyWebClient() {
         return WebClient.builder()
-                .baseUrl(properties.host)
+                .baseUrl(currencyProperties.host)
+                .build();
+    }
+
+    @Bean(name = "accountWebClient")
+    public WebClient accountWebClient() {
+        return WebClient.builder()
+                .baseUrl(accountProperties.host)
+                .build();
+    }
+
+    @Bean(name = "crmWebClient")
+    public WebClient crmWebClient() {
+        return WebClient.builder()
+                .baseUrl(crmProperties.host)
                 .build();
     }
 }
