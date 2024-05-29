@@ -27,6 +27,7 @@ import ru.mediasoft.warehouse.product.service.ProductService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -133,7 +134,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private List<OrderedProduct> makingOrderedProduct(Order order, Map<UUID, Integer> orderMap) {
-        return productRepository.findAllById(orderMap.keySet()).stream()
+        List<Product> products = productRepository.findAllById(orderMap.keySet());
+        existProductValidator(products.stream().map(Product::getId).collect(Collectors.toSet()), orderMap); // проверка на наличие всех товаров из заказа
+
+        return products.stream()
                 .peek(product -> {
                     productValidator(product, orderMap);   // проверка на наличие и доступность товаров
                     quantityUpdate(product, orderMap);     // изменение количества товаров
@@ -150,6 +154,14 @@ public class OrderServiceImpl implements OrderService {
                                 .build())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private void existProductValidator(Set<UUID> products, Map<UUID, Integer> orderMap) {
+        for (UUID uuid : orderMap.keySet()) {
+            if (!products.contains(uuid)) {
+                throw new EntityNotFoundException("Нет на складе товара с id=" + uuid);
+            }
+        }
     }
 
     private void quantityUpdate(Product product, Map<UUID, Integer> orderMap) {
