@@ -1,0 +1,9 @@
+apiVersion: v2
+name: warehouse-kafka
+version: 1.0.0
+description: Warehouse-Kafka
+type: application
+maintainers:
+  - name: Georgii Tatevosian
+    email: geo-tat@mail.ru
+appVersion: 1.0.0

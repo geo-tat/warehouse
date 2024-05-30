@@ -42,5 +42,12 @@ rest:
       enabled: false
     methods:
       get-currency: /api/v1/currencies
+app:
+  kafka:
+    enabled: true
 
+kafka:
+
+  bootstrapAddress: localhost:9091
+  groupId: group1
 
