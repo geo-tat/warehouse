@@ -1,7 +1,7 @@
 package ru.mediasoft.warehouse.kafka.handler;
 
 
-import ru.mediasoft.warehouse.kafka.EventSource;
+import ru.mediasoft.warehouse.kafka.event.EventSource;
 
 public interface EventHandler<T extends EventSource> {
 

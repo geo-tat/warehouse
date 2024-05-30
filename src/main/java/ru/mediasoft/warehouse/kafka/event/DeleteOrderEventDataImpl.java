@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.mediasoft.warehouse.kafka.EventStatus;
-import ru.mediasoft.warehouse.kafka.KafkaEvent;
+import ru.mediasoft.warehouse.kafka.Event;
 
 import java.util.UUID;
 
@@ -13,14 +12,14 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeleteOrderEventData implements KafkaEvent {
+public class DeleteOrderEventDataImpl implements KafkaEvent {
 
-    private EventStatus event;
+    private Event event;
     private Long customerId;
     private UUID orderId;
 
     @Override
-    public EventStatus getEvent() {
-        return EventStatus.DELETE_ORDER;
+    public Event getEvent() {
+        return Event.DELETE_ORDER;
     }
 }

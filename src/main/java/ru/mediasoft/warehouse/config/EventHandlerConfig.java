@@ -3,7 +3,7 @@ package ru.mediasoft.warehouse.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.mediasoft.warehouse.kafka.EventSource;
+import ru.mediasoft.warehouse.kafka.event.EventSource;
 import ru.mediasoft.warehouse.kafka.handler.EventHandler;
 
 import java.util.HashSet;

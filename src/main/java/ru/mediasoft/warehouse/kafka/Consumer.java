@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import ru.mediasoft.warehouse.kafka.event.EventSource;
+import ru.mediasoft.warehouse.kafka.event.KafkaEvent;
 import ru.mediasoft.warehouse.kafka.handler.EventHandler;
 
 import java.util.Set;

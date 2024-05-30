@@ -2,7 +2,7 @@ package ru.mediasoft.warehouse.kafka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum EventStatus {
+public enum Event {
     @JsonProperty("event")
     CREATE_ORDER,
     @JsonProperty("event")
@@ -10,5 +10,5 @@ public enum EventStatus {
     @JsonProperty("event")
     DELETE_ORDER,
     @JsonProperty("event")
-    CHANGE_ORDER_STATUS
+    UPDATE_ORDER_STATUS
 }
