@@ -2,10 +2,10 @@ package ru.mediasoft.warehouse.kafka;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import ru.mediasoft.warehouse.kafka.event.UpdateOrderStatusEventData;
 import ru.mediasoft.warehouse.kafka.event.CreateOrderEventData;
 import ru.mediasoft.warehouse.kafka.event.DeleteOrderEventData;
 import ru.mediasoft.warehouse.kafka.event.UpdateOrderEventData;
+import ru.mediasoft.warehouse.kafka.event.UpdateOrderStatusEventData;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
