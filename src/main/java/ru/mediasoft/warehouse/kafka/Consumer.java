@@ -22,14 +22,14 @@ public class Consumer {
 
     private final Set<EventHandler<EventSource>> eventHandlers;
 
-    @KafkaListener(topics = "brokerage-intercessor", containerFactory = "kafkaListenerContainerFactoryString")
+    @KafkaListener(topics = "test_service", containerFactory = "kafkaListenerContainerFactoryString")
     public void listenGroupTopic2(String message) throws JsonProcessingException {
         log.info("Receive message: {}", message);
 
         final ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            final KafkaEvent eventSource = objectMapper.readValue(message, KafkaEvent.class);
+            final KafkaEvent eventSource = objectMapper.readValue(message, KafkaEvent.class);   // проблема
             log.info("EventSource: {}", eventSource);
 
             eventHandlers.stream()
