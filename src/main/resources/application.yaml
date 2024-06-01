@@ -31,6 +31,8 @@ logging:
     org.springframework.orm.jpa.JpaTransactionManager: DEBUG
 
 app:
+  kafka:
+    enabled: true
   scheduling:
     enabled: false
     period: 86400000
@@ -46,3 +48,6 @@ rest:
     methods:
       get-currency: /api/v1/currencies
 
+kafka:
+  bootstrapAddress: localhost:9091
+  groupId: group1
