@@ -21,12 +21,12 @@ import java.util.Set;
 public class Consumer {
 
     private final Set<EventHandler<EventSource>> eventHandlers;
+    final ObjectMapper objectMapper = new ObjectMapper();
 
     @KafkaListener(topics = "test_service", containerFactory = "kafkaListenerContainerFactoryString")
     public void listenGroupTopic2(String message) throws JsonProcessingException {
         log.info("Receive message: {}", message);
 
-        final ObjectMapper objectMapper = new ObjectMapper();
 
         try {
             final KafkaEvent eventSource = objectMapper.readValue(message, KafkaEvent.class);   // проблема
