@@ -3,7 +3,7 @@ package ru.mediasoft.warehouse.config;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,13 +19,12 @@ import java.util.Map;
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "kafka.enabled")
 public class KafkaConsumerConfig {
-
-    @Value("${kafka.bootstrapAddress}")
-    private String SERVER;
-    @Value("${kafka.groupId}")
-    private String groupId;
+    @Autowired
+    private KafkaProperties properties;
 
     private ConsumerFactory<String, String> consumerFactoryString() {
+        final String SERVER = properties.getBootstrapAddress();
+        final String groupId = properties.getGroupId();
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, SERVER);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");

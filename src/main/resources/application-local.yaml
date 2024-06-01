@@ -47,7 +47,6 @@ app:
     enabled: true
 
 kafka:
-
   bootstrapAddress: localhost:9091
   groupId: group1
 
