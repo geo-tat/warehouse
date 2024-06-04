@@ -4,8 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mediasoft.warehouse.account.AccountProvider;
-import ru.mediasoft.warehouse.crm.CrmProvider;
+import ru.mediasoft.warehouse.account.AccountServiceClient;
+import ru.mediasoft.warehouse.crm.CrmServiceClient;
 import ru.mediasoft.warehouse.customer.dto.CustomerInfo;
 import ru.mediasoft.warehouse.customer.model.Customer;
 import ru.mediasoft.warehouse.customer.repository.CustomerRepository;
@@ -45,8 +45,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderedProductRepository orderedProductRepository;
     private final ProductService productService;
-    private final AccountProvider accountProvider;
-    private final CrmProvider crmProvider;
+    private final AccountServiceClient accountServiceClient;
+    private final CrmServiceClient crmServiceClient;
 
     @Transactional
     @Override
@@ -242,12 +242,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Map<String, String> getUins(Set<String> logins) {
-        CompletableFuture<Map<String, String>> uins = crmProvider.getInns(logins);
+        CompletableFuture<Map<String, String>> uins = crmServiceClient.getUin(logins);
         return uins.join();
     }
 
     private Map<String, String> getAccount(Set<String> logins) {
-        CompletableFuture<Map<String, String>> accounts = accountProvider.getAccount(logins);
+        CompletableFuture<Map<String, String>> accounts = accountServiceClient.getAccount(logins);
         return accounts.join();
     }
 

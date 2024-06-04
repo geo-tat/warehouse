@@ -45,6 +45,4 @@ public class Customer {
     @OneToMany
     @Transient
     private List<Order> orderList;
-
-
 }

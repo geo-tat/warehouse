@@ -13,21 +13,21 @@ public class WebClientConfig {
     private final RestAccountProperties accountProperties;
     private final RestCrmProperties crmProperties;
 
-    @Bean(name = "currencyWebClient")
+    @Bean
     public WebClient currencyWebClient() {
         return WebClient.builder()
                 .baseUrl(currencyProperties.host)
                 .build();
     }
 
-    @Bean(name = "accountWebClient")
+    @Bean
     public WebClient accountWebClient() {
         return WebClient.builder()
                 .baseUrl(accountProperties.host)
                 .build();
     }
 
-    @Bean(name = "crmWebClient")
+    @Bean
     public WebClient crmWebClient() {
         return WebClient.builder()
                 .baseUrl(crmProperties.host)
