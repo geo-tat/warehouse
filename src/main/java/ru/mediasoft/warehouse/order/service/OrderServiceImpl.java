@@ -1,14 +1,14 @@
 package ru.mediasoft.warehouse.order.service;
 
+import com.geotat.starter.exception.CustomerAccessException;
+import com.geotat.starter.exception.OrderIsNotValidException;
+import com.geotat.starter.exception.OrderStatusValidException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mediasoft.warehouse.customer.model.Customer;
 import ru.mediasoft.warehouse.customer.repository.CustomerRepository;
-import ru.mediasoft.warehouse.exception.CustomerAccessException;
-import ru.mediasoft.warehouse.exception.OrderIsNotValidException;
-import ru.mediasoft.warehouse.exception.OrderStatusValidException;
 import ru.mediasoft.warehouse.order.dto.OrderDtoIn;
 import ru.mediasoft.warehouse.order.dto.OrderDtoOut;
 import ru.mediasoft.warehouse.order.model.Order;
