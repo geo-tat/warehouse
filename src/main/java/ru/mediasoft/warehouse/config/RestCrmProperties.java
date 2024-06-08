@@ -8,14 +8,13 @@ import java.util.Map;
 
 @Component
 @Data
-@ConfigurationProperties(prefix = "rest.currency-service")
-public class RestProperties {
-
+@ConfigurationProperties(prefix = "rest.crm-service")
+public class RestCrmProperties {
     String host;
     private Map<String, String> methods;
 
-    public String getCurrenciesEndpoint() {
-        return methods.get("get-currency");
+    public String getCrmEndpoint() {
+        return methods.get("get-uin");
     }
 
 }

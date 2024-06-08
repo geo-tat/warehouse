@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class CustomerAccessException extends RuntimeException {
-    private final String s;
+    private final String message;
 
-    public CustomerAccessException(String s) {
-        this.s = s;
+    public CustomerAccessException(String message) {
+        this.message = message;
     }
 }
