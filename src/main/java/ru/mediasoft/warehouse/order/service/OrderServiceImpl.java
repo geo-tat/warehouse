@@ -128,8 +128,9 @@ public class OrderServiceImpl implements OrderService {
                 .map(order -> order.getCustomer().getLogin())
                 .collect(Collectors.toSet());
 
-        Map<String, String> accounts = getAccount(logins);
-        Map<String, String> uins = getUins(logins);
+
+        CompletableFuture<Map<String, String>> uins = crmServiceClient.getUin(logins);
+        CompletableFuture<Map<String, String>> accounts = accountServiceClient.getAccount(logins);
 
         return orders.stream()
                 .flatMap(order -> order.getOrderedProducts().stream())
@@ -145,9 +146,9 @@ public class OrderServiceImpl implements OrderService {
                                     .quantity(orderedProduct.getQuantity())
                                     .customer(CustomerInfo.builder()
                                             .id(customer.getId())
-                                            .accountNumber(accounts.get(customer.getLogin()))
+                                            .accountNumber(accounts.join().get(customer.getLogin()))
                                             .email(customer.getEmail())
-                                            .inn(uins.get(customer.getLogin()))
+                                            .inn(uins.join().get(customer.getLogin()))
                                             .build())
                                     .build();
                         }, Collectors.toList())
@@ -251,15 +252,4 @@ public class OrderServiceImpl implements OrderService {
             }
         });
     }
-
-    private Map<String, String> getUins(Set<String> logins) {
-        CompletableFuture<Map<String, String>> uins = crmServiceClient.getUin(logins);
-        return uins.join();
-    }
-
-    private Map<String, String> getAccount(Set<String> logins) {
-        CompletableFuture<Map<String, String>> accounts = accountServiceClient.getAccount(logins);
-        return accounts.join();
-    }
-
 }

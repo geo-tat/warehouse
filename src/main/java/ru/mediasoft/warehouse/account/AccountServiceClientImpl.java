@@ -34,7 +34,6 @@ public class AccountServiceClientImpl implements AccountServiceClient {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {
                 })
-                .delayElement(Duration.ofSeconds(3))
                 .toFuture();
 
 

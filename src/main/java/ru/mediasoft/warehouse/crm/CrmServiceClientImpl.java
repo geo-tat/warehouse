@@ -8,7 +8,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.mediasoft.warehouse.config.RestCrmProperties;
 
-import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -34,7 +33,6 @@ public class CrmServiceClientImpl implements CrmServiceClient {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {
                 })
-                .delayElement(Duration.ofSeconds(3))
                 .toFuture();
     }
 }
