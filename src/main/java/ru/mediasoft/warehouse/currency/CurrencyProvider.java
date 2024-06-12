@@ -1,4 +1,4 @@
-package ru.mediasoft.warehouse.product.service.currency;
+package ru.mediasoft.warehouse.currency;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;

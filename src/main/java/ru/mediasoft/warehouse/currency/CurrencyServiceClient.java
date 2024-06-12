@@ -1,4 +1,4 @@
-package ru.mediasoft.warehouse.product.service.currency;
+package ru.mediasoft.warehouse.currency;
 
 
 import ru.mediasoft.warehouse.product.model.ExchangeRate;
