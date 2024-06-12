@@ -1,4 +1,4 @@
-package ru.mediasoft.warehouse.product.service.currency;
+package ru.mediasoft.warehouse.currency;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
