@@ -6,6 +6,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import ru.mediasoft.warehouse.product.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.product.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.product.dto.ProductDtoOut;
@@ -81,7 +85,7 @@ public class ProductController {
 
     @Operation(summary = "Загрузка изображения товара")
     @PostMapping("/{id}/upload")
-    String uploadImage(@PathVariable UUID id,
+    UUID uploadImage(@PathVariable UUID id,
                        @RequestParam("file") MultipartFile file) throws IOException {
 
         return imageService.upload(id, file);
@@ -89,9 +93,19 @@ public class ProductController {
 
     @Operation(summary = "Скачивание изображений товара")
     @GetMapping("/{id}/download")
-    byte[] downloadImage(@PathVariable UUID id) throws IOException {
+    public ResponseEntity<StreamingResponseBody> downloadImageZip(@PathVariable UUID id) {
+        StreamingResponseBody stream = outputStream -> {
+            try {
+                imageService.download(id, outputStream);
+            } catch (IOException e) {
+                throw new RuntimeException("Ошибка при скачивании изображений", e);
+            }
+        };
 
-        return imageService.download(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=images.zip")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(stream);
     }
 
 

@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -32,6 +34,6 @@ public class Image {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private String fileKey;
+    private UUID fileKey;
 
 }

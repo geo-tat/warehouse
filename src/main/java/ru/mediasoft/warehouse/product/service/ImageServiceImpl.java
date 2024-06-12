@@ -11,10 +11,10 @@ import ru.mediasoft.warehouse.product.repository.ImageRepository;
 import ru.mediasoft.warehouse.product.repository.ProductRepository;
 import ru.mediasoft.warehouse.product.storage.S3Storage;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,11 +31,11 @@ public class ImageServiceImpl implements ImageService {
     private final S3Storage storage;
 
     @Override
-    public String upload(UUID id, MultipartFile file) throws IOException {
+    public UUID upload(UUID id, MultipartFile file) throws IOException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
         File convetedFiles = convertMultiPartFileToFile(file);
-        String key = storage.uploadFile(convetedFiles);
+        UUID key = storage.uploadFile(convetedFiles);
         Image image = Image.builder()
                 .product(product)
                 .fileKey(key)
@@ -45,32 +45,27 @@ public class ImageServiceImpl implements ImageService {
         return key;
     }
 
-    @Override
-    public byte[] download(UUID id) throws IOException {
-
+    public void download(UUID id, OutputStream outputStream) throws IOException {
         List<Image> images = repository.findAllByProductId(id);
-        List<String> fileKeys = images.stream().map(Image::getFileKey).toList();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+        List<UUID> fileKeys = images.stream().map(Image::getFileKey).toList();
 
-        for (String fileKey : fileKeys) {
-            byte[] fileContent = storage.downloadFile(fileKey);
-            ZipEntry zipEntry = new ZipEntry(fileKey);
-            zipOutputStream.putNextEntry(zipEntry);
-            zipOutputStream.write(fileContent);
-            zipOutputStream.closeEntry();
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
+            for (UUID fileKey : fileKeys) {
+                byte[] fileContent = storage.downloadFile(fileKey);
+                ZipEntry zipEntry = new ZipEntry(String.valueOf(fileKey));
+                zipOutputStream.putNextEntry(zipEntry);
+                zipOutputStream.write(fileContent);
+                zipOutputStream.closeEntry();
+            }
+            zipOutputStream.finish();
         }
-
-        zipOutputStream.close();
-
-        return byteArrayOutputStream.toByteArray();
     }
 
     private File convertMultiPartFileToFile(MultipartFile file) throws IOException {
         File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(convFile)) {
+            fos.write(file.getBytes());
+        }
         return convFile;
     }
 
