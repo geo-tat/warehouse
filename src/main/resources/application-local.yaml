@@ -1,0 +1,64 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog-master.xml
+
+  application:
+    name: warehouse
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+    show-sql: true
+  sql:
+    init:
+      mode: always
+  datasource:
+    platform: h2
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:warehouse-db
+    username: test
+    password: test
+  h2:
+    console:
+      enabled: true
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: INFO
+        transaction: INFO
+        transaction.interceptor: TRACE
+        orm.jpa.JpaTransactionManager: DEBUG
+
+rest:
+  crm-service:
+    host: http://localhost:8083
+    mock:
+      enabled: false
+    methods:
+      get-uin: /crm
+  account-service:
+    host: http://localhost:8082
+    mock:
+      enabled: false
+    methods:
+      get-account: /account
+  currency-service:
+    host: http://localhost:8081
+    mock:
+      enabled: false
+    methods:
+      get-currency: /api/v1/currencies
+app:
+  kafka:
+    enabled: false
+
+kafka:
+  bootstrapAddress: localhost:9091
+  groupId: group1
+
