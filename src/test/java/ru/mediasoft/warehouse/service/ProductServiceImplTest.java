@@ -7,9 +7,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import ru.mediasoft.warehouse.product.dto.ProductDtoFotUpdate;
+import ru.mediasoft.warehouse.product.dto.ProductDtoForUpdate;
 import ru.mediasoft.warehouse.product.dto.ProductDtoIn;
 import ru.mediasoft.warehouse.product.dto.ProductDtoOut;
 import ru.mediasoft.warehouse.product.model.CategoryType;
@@ -18,6 +20,7 @@ import ru.mediasoft.warehouse.product.repository.ProductRepository;
 import ru.mediasoft.warehouse.product.service.ProductServiceImpl;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +39,7 @@ public class ProductServiceImplTest {
 
     private Product product;
     private ProductDtoIn dtoIn;
-    private ProductDtoFotUpdate dtoUpdate;
+    private ProductDtoForUpdate dtoUpdate;
     Pageable pageable = PageRequest.of(0, 10);
     @BeforeEach
     public void setUp() {
@@ -57,7 +60,7 @@ public class ProductServiceImplTest {
                 .price(BigDecimal.valueOf(10.0))
                 .quantity(100)
                 .build();
-        dtoUpdate = ProductDtoFotUpdate.builder()
+        dtoUpdate = ProductDtoForUpdate.builder()
                 .name("NewName")
                 .sku("NewSKU")
                 .description("NewDescription")
@@ -105,9 +108,12 @@ public class ProductServiceImplTest {
 
     @Test
     public void testGetAllProducts() {
-        when(repository.findAll()).thenReturn(Collections.singletonList(product));
+        Page<Product> expectedPage = new PageImpl<>(Collections.singletonList(product), pageable, 1);
 
-        assertEquals(1, productService.getAll(pageable).size());
+        doReturn(expectedPage).when(repository).findAll(pageable);
+
+        Collection<ProductDtoOut> actualPage = productService.getAll(pageable);
+        assertEquals(1, actualPage.size());
 
     }
 
