@@ -62,3 +62,10 @@ kafka:
   bootstrapAddress: localhost:9091
   groupId: group1
 
+s3:
+  accessKey: test
+  secretKey: test
+  bucketName: warehouse
+  region: us-east-1
+  path: http://localhost:4566
+

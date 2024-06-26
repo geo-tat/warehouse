@@ -11,6 +11,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -63,4 +64,6 @@ public class Product {
     @NotNull
     @Column(name = "isAvailable")
     private boolean isAvailable;
+    @OneToMany
+    private Set<Image> images;
 }

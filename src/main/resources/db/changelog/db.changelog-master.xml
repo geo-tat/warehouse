@@ -9,4 +9,5 @@
     <include file="v2/create-customer-table.xml" relativeToChangelogFile="true"/>
     <include file="v2/create-order-table.xml" relativeToChangelogFile="true"/>
     <include file="v2/create-ordered-product-table.xml" relativeToChangelogFile="true"/>
+    <include file="v3/create-image-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
