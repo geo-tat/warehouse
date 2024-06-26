@@ -32,22 +32,21 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public UUID upload(UUID id, MultipartFile file) throws IOException {
-        Product product = productRepository.findById(id)
+        final Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Товар на складе не найден."));
-        File convetedFiles = convertMultiPartFileToFile(file);
-        UUID key = storage.uploadFile(convetedFiles);
-        Image image = Image.builder()
+        final File convertedFiles = convertMultiPartFileToFile(file);
+        final UUID key = storage.uploadFile(convertedFiles);
+        final Image image = Image.builder()
                 .product(product)
                 .fileKey(key)
                 .build();
-        Image finalImage = repository.save(image);
-        Long imageId = finalImage.getId();
+        repository.save(image);
         return key;
     }
 
     public void download(UUID id, OutputStream outputStream) throws IOException {
-        List<Image> images = repository.findAllByProductId(id);
-        List<UUID> fileKeys = images.stream().map(Image::getFileKey).toList();
+        final List<Image> images = repository.findAllByProductId(id);
+        final List<UUID> fileKeys = images.stream().map(Image::getFileKey).toList();
 
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
             for (UUID fileKey : fileKeys) {
@@ -62,7 +61,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private File convertMultiPartFileToFile(MultipartFile file) throws IOException {
-        File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        final File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         try (FileOutputStream fos = new FileOutputStream(convFile)) {
             fos.write(file.getBytes());
         }
